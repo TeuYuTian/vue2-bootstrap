@@ -1,37 +1,33 @@
 <template>
   <div id="app">
-    <h2 class="greenFont">My first ever Vue Tutorial</h2>
+      <h2 class="greenFont">My first ever Vue Tutorial</h2>
 
-    <h4 class="blueFont">{{ message }}</h4>
+      <h4 class="blueFont">{{ message }}</h4>
 
-    Name:<input type="text" v-model="name" /> <br>
-    Addr:<input type="text" v-model="addr"/> <br>
-    Email:<input type="text" v-model="email"/> <br>
-    Tel:<input type="text" v-model="tel"/> <br>
+      Name:<input type="text" v-model="name"/> <br> 
+      Addr:<input type="text" v-model="addr"/> <br> 
+      Email:<input type="text" v-model="email"/> <br> 
+      Tel:<input type="text" v-model="tel"/>  <br><br>
 
+      <h2>Name : {{ name }}</h2>
+      <h3>Addr :{{ addr }}</h3>
+      <h3>Email: {{ email }}</h3>
+      <h3>Tel: {{ tel }}</h3>
 
-    <h2>Name: {{name}}</h2>
-    <h2>Addr: {{addr}}</h2>
-    <h2>Email: {{email}}</h2>
-    <h2>Tel: {{tel}}</h2>
+    <button class="greenFont" @click="increase"> +1</button>
+    <button class="redFont" @click="decrease"> -1</button>
+    <br>
+    <button class="greenFont" @click="increase5"> +5</button>
+    <button class="redFont" @click="decrease5"> -5</button>
 
+    <h2> {{counter}}</h2>
+    <br>
     <img v-bind:src="image1">
     <img :src="image2">
     <img :src="image3">
+    <br>
 
-    <h3 class="redbg"><a :href="url1">{{web1}}</a></h3>
-    <h3><a :href="url2">{{web2}}</a></h3>
-    <h3><a :href="url3">{{web3}}</a></h3> <hr>
-
-    <button class="greenFont" @click="increase"> Increase</button>
-    <button class="blueFont" v-on:click="decrease"> Decrease</button> <br>
-    <button class="greenFont" @click="increasefive"> Increase5</button>
-    <button class="redFont" @click="decreasefive"> Decrease5</button>
-
-    <h2>{{counter}}</h2>
-    
-
-  </div>
+</div>
 </template>
 
 <script>
@@ -48,27 +44,27 @@ export default {
       image1: "apple.jpg",
       image2: "orange.jpg",
       image3: "strawberry.jpg",
-      url1: "http://apple.com",
-      url2: "http://orange.com",
-      url3: "http://abc.com",
+      url1: "https://apple.com",
+      url2: "https://orange.com",
+      url3: "https://abc.com",
       web1: "Fruit Company",
       web2: "Orange Company",
-      web3: "ABC Company",
-      counter:0,
+      web3: "Another Fruit Company",
+      counter: 0
     };
   },
   methods: {
-    increase(){
-      this.counter= this.counter +1;
+    increase() {
+      this.counter = this.counter + 1;
     },
-      decrease(){
-      this.counter= this.counter -1;
+    decrease() {
+      this.counter = this.counter - 1;
     },
-    increasefive(){
-      this.counter= this.counter +5;
+    increase5() {
+      this.counter = this.counter + 5;
     },
-      decreasefive(){
-      this.counter= this.counter -5;
+    decrease5() {
+      this.counter = this.counter - 5;
     }
   },
   computed: {},
@@ -80,8 +76,10 @@ export default {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
 }
 
+
 .blueFont {
   color: blue;
+  
 }
 
 .greenFont {
