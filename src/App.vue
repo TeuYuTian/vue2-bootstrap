@@ -1,33 +1,66 @@
 <template>
   <div id="app">
-      <h2 class="greenFont">My first ever Vue Tutorial</h2>
 
-      <h4 class="blueFont">{{ message }}</h4>
+    <b-row>
+      <div v-for="i,index in products" :key="i.name" :index="index">
+        <b-col>
+          <b-card class="mt-4">
+            {{i.name}}
+            <br/>
+            <img :src="i.image" width="100%"/>
+            <br>
 
-      Name:<input type="text" v-model="name"/> <br> 
-      Addr:<input type="text" v-model="addr"/> <br> 
-      Email:<input type="text" v-model="email"/> <br> 
-      Tel:<input type="text" v-model="tel"/>  <br><br>
+            Price: {{i.price}}
+            <br>
 
-      <h2>Name : {{ name }}</h2>
-      <h3>Addr :{{ addr }}</h3>
-      <h3>Email: {{ email }}</h3>
-      <h3>Tel: {{ tel }}</h3>
+            <b-button class="mr-2" variant ="success" size="sm" @click="increase5" > +5 </b-button>
+            <b-button variant="success" size="sm" @click="increase"> + </b-button>
 
-    <button class="greenFont" @click="increase"> +1</button>
-    <button class="redFont" @click="decrease"> -1</button>
-    <br>
-    <button class="greenFont" @click="increase5"> +5</button>
-    <button class="redFont" @click="decrease5"> -5</button>
+            {{i.quantity}}
 
-    <h2> {{counter}}</h2>
-    <br>
-    <img v-bind:src="image1">
-    <img :src="image2">
-    <img :src="image3">
-    <br>
+            <b-button class="mr-2" variant ="danger" size="sm" @click="decrease"> - </b-button>
+            <b-button variant="danger" size="sm" @click="decrease5"> -5 </b-button>
+            <br/>
+            Subtotal: RM{{i.quantity*i.price}}
+          </b-card>
+        </b-col>    
+      </div>
+    </b-row>
 
+    <hr>
+
+
+Item Qty Price Subtotal
+<div v-for="i,index in products" :key="i.name" :index="index">
+  <div v-if="i.quantity > 0" >
+    {{i.name}}-{{i.quantity}}-
+  </div>
 </div>
+
+total sales: {{calcTotal}} <br>
+
+total discount amt: {{calcDiscount}} <br>
+discount given in % : {{discountPct * 100 }}% <br>
+
+** if sales above 100, give free shipping, else fee = 10 <br>
+
+Shipping Fees:
+
+<b-row>
+  <b-col cols="4">
+    Delivery Area:
+    <b-form-select
+    v-model="pickupArea"
+    :options="areaOptions"
+    ></b-form-select>
+  </b-col>
+</b-row>
+
+Shipping Fees: {{calcShippingFees}} <br>
+Grand Total: <br>
+
+  </div>
+
 </template>
 
 <script>
@@ -36,39 +69,123 @@ export default {
   components: {},
   data() {
     return {
-      message: "Please enter your details below",
       name: "",
-      addr: "",
+      mobile: "",
       email: "",
-      tel: "",
-      image1: "apple.jpg",
-      image2: "orange.jpg",
-      image3: "strawberry.jpg",
-      url1: "https://apple.com",
-      url2: "https://orange.com",
-      url3: "https://abc.com",
-      web1: "Fruit Company",
-      web2: "Orange Company",
-      web3: "Another Fruit Company",
-      counter: 0
+      quantity: 0,
+      totalSales: 0,
+      discountPct: 0,
+      pickupArea: 0,
+      areaOptions: [
+        { value: "0", text: "Mont Kiara" },
+        { value: "1", text: "Cheras" },
+        { value: "2", text: "Puchong" },
+        { value: "3", text: "Kepong" },
+        { value: "4", text: "Others" },
+      ],
+      products: [
+        {
+          name: "Apple",
+          quantity: 0,
+          price: 10,
+          stock: 0,
+          image: "apple.jpg",
+        },
+        {
+          name: "Orange",
+          quantity: 0,
+          price: 12,
+          stock: 0,
+          image: "orange.jpg",
+        },
+        {
+          name: "Strawberry",
+          quantity: 0,
+          price: 9,
+          stock: 0,
+          image: "strawberry.jpg",
+        },
+        {
+          name: "Strawberry 2",
+          quantity: 0,
+          price: 7,
+          stock: 0,
+          image: "strawberry.jpg",
+        },
+        {
+          name: "Orange 2",
+          quantity: 0,
+          price: 13,
+          stock: 0,
+          image: "orange.jpg",
+        },
+        {
+          name: "Apple 2",
+          quantity: 0,
+          price: 11,
+          stock: 0,
+          image: "apple.jpg",
+        },
+      ],
     };
   },
+
   methods: {
-    increase() {
-      this.counter = this.counter + 1;
+    increase(i){
+      return (i.quantity = i.quantity + 1);
     },
-    decrease() {
-      this.counter = this.counter - 1;
+    decrease(i){
+      return (i.quantity = i.quantity - 1);
     },
-    increase5() {
-      this.counter = this.counter + 5;
+    increase5(i){
+      return (i.quantity = i.quantity + 5);
     },
-    decrease5() {
-      this.counter = this.counter - 5;
-    }
+    decrease5(i){
+      return (i.quantity = i.quantity - 5);
+    },
   },
-  computed: {},
-};
+    
+
+  computed:{
+    calcTotal(i){
+      let total = i.quantity;
+
+    //   for (let i = 0 ; i < this.products.length; i++){
+    //   total += this.products[i].quantity*this.product[i].price
+    //   }
+      return total;
+    },
+
+    calcDiscount(i){
+      let discount=0.15 
+      return i.quantity*discount;
+    },
+  },
+
+    // calcDiscount(){
+    //   if(this.totalsales >100) {
+    //     this.discountPct =0.15;
+    // }else if (this.totalSales >40){
+    //   this.discountPct =0.1;
+    // } else {
+    //   this.discountPct =0;
+    // }
+    //   return this.totalSales * (1 - this.discountPct);
+
+    // },
+     calcShippingFees(){
+       let fees = 20;
+       if (this.pickupArea == 0) {
+         fees=15;
+       } else if (this.pickupArea == 5){
+         fees=25;
+       }
+       return fees;
+     },
+  // },
+
+
+}
 </script>
 
 <style>
@@ -96,3 +213,5 @@ export default {
   background: red;
 }
 </style>
+
+
