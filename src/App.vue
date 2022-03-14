@@ -13,13 +13,13 @@
             Price: {{i.price}}
             <br>
 
-            <b-button class="mr-2" variant ="success" size="sm" @click="increase5" > +5 </b-button>
-            <b-button variant="success" size="sm" @click="increase"> + </b-button>
+            <b-button class="mr-2" variant ="success" size="sm" @click="increase5(i)" > +5 </b-button>
+            <b-button variant="success" size="sm" @click="increase(i)"> + </b-button>
 
             {{i.quantity}}
 
-            <b-button class="mr-2" variant ="danger" size="sm" @click="decrease"> - </b-button>
-            <b-button variant="danger" size="sm" @click="decrease5"> -5 </b-button>
+            <b-button class="mr-2" variant ="danger" size="sm" @click="decrease(i)"> - </b-button>
+            <b-button variant="danger" size="sm" @click="decrease5(i)"> -5 </b-button>
             <br/>
             Subtotal: RM{{i.quantity*i.price}}
           </b-card>
@@ -33,18 +33,16 @@
 Item Qty Price Subtotal
 <div v-for="i,index in products" :key="i.name" :index="index">
   <div v-if="i.quantity > 0" >
-    {{i.name}}-{{i.quantity}}-
+    {{i.name}} {{i.quantity}}
   </div>
 </div>
 
 total sales: {{calcTotal}} <br>
 
 total discount amt: {{calcDiscount}} <br>
-discount given in % : {{discountPct * 100 }}% <br>
+discount given in % : {{discountAmt * 100 }}% <br>
 
 ** if sales above 100, give free shipping, else fee = 10 <br>
-
-Shipping Fees:
 
 <b-row>
   <b-col cols="4">
@@ -57,7 +55,7 @@ Shipping Fees:
 </b-row>
 
 Shipping Fees: {{calcShippingFees}} <br>
-Grand Total: <br>
+Grand Total: {{calcTotal-calcDiscount+calcShippingFees}}<br>
 
   </div>
 
@@ -130,9 +128,11 @@ export default {
     };
   },
 
+
   methods: {
     increase(i){
       return (i.quantity = i.quantity + 1);
+
     },
     decrease(i){
       return (i.quantity = i.quantity - 1);
@@ -144,48 +144,55 @@ export default {
       return (i.quantity = i.quantity - 5);
     },
   },
-    
 
-  computed:{
-    calcTotal(i){
-      let total = i.quantity;
-
-    //   for (let i = 0 ; i < this.products.length; i++){
-    //   total += this.products[i].quantity*this.product[i].price
-    //   }
+   computed: {
+    calcTotal() {
+      let total = 0;
+      for (let i = 0; i < this.products.length; i++) {
+        total += this.products[i].quantity * this.products[i].price;
+      }
+    //   this.totalSales = total;
       return total;
     },
 
-    calcDiscount(i){
-      let discount=0.15 
-      return i.quantity*discount;
+discountAmt() {
+
+      let discountPct = 0;
+
+      // this.discountAmt = discountPct;
+
+      if (this.calcTotal > 100) {
+        discountPct = 0.15;
+      } else if (this.calcTotal > 40) {
+        discountPct = 0.1;
+      } else {
+        discountPct = 0;
+      }
+      return discountPct;
+    },
+
+        calcDiscount() {
+      return (this.calcTotal * this.discountAmt);
+    },
+
+
+    calcShippingFees() {
+      let fees = 20;
+      if (this.pickupArea == 0) {
+        fees = 15;
+      } else if (this.pickupArea == 4) {
+        fees = 25;
+      }
+      return fees;
     },
   },
 
-    // calcDiscount(){
-    //   if(this.totalsales >100) {
-    //     this.discountPct =0.15;
-    // }else if (this.totalSales >40){
-    //   this.discountPct =0.1;
-    // } else {
-    //   this.discountPct =0;
-    // }
-    //   return this.totalSales * (1 - this.discountPct);
 
-    // },
-     calcShippingFees(){
-       let fees = 20;
-       if (this.pickupArea == 0) {
-         fees=15;
-       } else if (this.pickupArea == 5){
-         fees=25;
-       }
-       return fees;
-     },
-  // },
+
 
 
 }
+
 </script>
 
 <style>
@@ -213,5 +220,6 @@ export default {
   background: red;
 }
 </style>
+
 
 
